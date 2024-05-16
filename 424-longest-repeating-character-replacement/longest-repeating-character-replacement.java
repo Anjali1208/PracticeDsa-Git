@@ -1,3 +1,4 @@
+//longest-repeating-character-replacement
 class Solution {
     public int characterReplacement(String s, int k) {
         int [] arr= new int[26];
@@ -10,6 +11,7 @@ class Solution {
             //System.out.println(s.charAt(r)-'A');
             //window=r-l+1;
             max=Math.max(max, arr[s.charAt(r)-'A']);
+            //System.out.println(arr[s.charAt(r)-'A']+"="+arr[s.charAt(r)-'A']);
            // while(window-max>k)
            if(r-l+1-max>k)
             {
