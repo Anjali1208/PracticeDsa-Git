@@ -1,41 +1,41 @@
 class Solution {
-
-    int count;
     public int reversePairs(int[] nums) {
-        count = 0;
-        merge(nums, 0, nums.length-1);
-        return count;
+        return merger(0,nums.length-1,nums);
     }
-    public int[] merge(int[] nums, int si, int ei){
+    
+    private int merger(int start,int end,int ar[]){
+        if (start >= end) return 0;
+            int mid = (start + end) / 2;
+            int cnt = merger(start,mid,ar);
+            cnt += merger(mid+1,end,ar);
+            cnt += merge(start,mid,end,ar);
+            return cnt;
         
-        if(si==ei){
-            return new int[]{nums[si]};
+    }
+    
+    private int merge(int start,int mid,int end,int[] ar){
+        int max_cnt = 0;
+        int j = mid+1;
+        for (int i=start;i<=mid;i++){
+            while (j<=end && ar[i] > (2*(long)ar[j])) j++;
+            max_cnt += j - (mid+1);
         }
         
-        int mid = si + (ei-si)/2;
-        int[] m1 = merge(nums, si, mid);
-        int[] m2 = merge(nums, mid+1, ei);
+        List<Integer> list = new ArrayList<>();
+        int i = start;
+        j = mid+1;
         
-		//count
-        int p2 = 0, p1=0;
-        for(; p1<m1.length; p1++){
-            while(p2<m2.length && 2*(long)m2[p2] < m1[p1])
-                p2++;
-            count += p2;
+        while (i <= mid && j <= end){
+            if (ar[i] < ar[j]) list.add(ar[i++]);
+            else list.add(ar[j++]);
         }
-		
-		//merge
-        int[] merged = new int[ei-si+1];
-        int p=0;
-        p1=0; p2=0;
-        while(p1<m1.length || p2<m2.length){
-            if(p1<m1.length && p2<m2.length)
-                merged[p++] = m1[p1] <= m2[p2] ? m1[p1++] : m2[p2++];
-            else if(p1<m1.length)
-                merged[p++] = m1[p1++];
-            else
-                merged[p++] = m2[p2++];
+        
+        while (i <= mid) list.add(ar[i++]);
+        while (j <= end) list.add(ar[j++]);
+        
+        for (int x=start;x<=end;x++){
+            ar[x] = list.get(x-start);
         }
-        return merged;
+        return max_cnt;
     }
 }
